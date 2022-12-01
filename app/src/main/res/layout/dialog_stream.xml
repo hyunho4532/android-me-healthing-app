@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="360dp"
+    android:background="#00FFFFFF"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ansungtangmyun"
+                android:gravity="center"
+                android:text="여긴 내 자리~"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="340dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="40dp"
+                android:hint="왜 이 장소가 맘에 드나요?"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <EditText
+                android:id="@+id/et_snippet"
+                android:layout_width="340dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="왜 좋아하나요?"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="@+id/et_title"
+                app:layout_constraintTop_toBottomOf="@+id/et_title" />
+
+            <Button
+                android:id="@+id/btn_ok"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:text="즐겨찾기 등록"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_snippet" />
+
+            <ImageView
+                android:id="@+id/iv_my_check"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/dialog_check" />
+
+            <TextView
+                android:id="@+id/tv_latitude_title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="@+id/et_snippet"
+                app:layout_constraintTop_toBottomOf="@+id/et_snippet" />
+
+            <TextView
+                android:id="@+id/tv_hardness_title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="@+id/et_snippet"
+                app:layout_constraintTop_toBottomOf="@+id/et_snippet" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

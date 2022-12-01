@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "91045665846",
+    "firebase_url": "https://myhealthing-default-rtdb.firebaseio.com",
+    "project_id": "myhealthing",
+    "storage_bucket": "myhealthing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91045665846:android:d10ea128399f03448d0c97",
+        "android_client_info": {
+          "package_name": "com.example.workingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91045665846-h5clkkobbfnoa54p7uhc1lnh6kffmug3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1BvzdU8gxQohY3J9_0COzS9mzu6JGcoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91045665846-h5clkkobbfnoa54p7uhc1lnh6kffmug3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
