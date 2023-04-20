@@ -5,7 +5,7 @@
     <string name="navigation_menu1">운동</string>
     <string name="navigation_menu2">식단</string>
     <string name="navigation_menu3">게시판</string>
-    <string name="walk_main_title">오늘 하루도 꾸준HI</string>
+    <string name="walk_main_title">오늘 하루도 꾸준히</string>
     <string name="goal_count">목표하는 걸음수를 입력해주세요!</string>
     <string name="API_location">API 위치</string>
     <string name="API_title">API 타이틀</string>

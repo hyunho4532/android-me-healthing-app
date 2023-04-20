@@ -1,7 +1,20 @@
 package com.example.workingapp.Activity.marker;
 
+import static com.example.workingapp.R.*;
+import static com.example.workingapp.R.drawable.activity_bread1;
+import static com.example.workingapp.R.drawable.activity_coffee_no_brand;
+import static com.example.workingapp.R.drawable.activity_compose_coffee;
+import static com.example.workingapp.R.drawable.activity_dunkin;
+import static com.example.workingapp.R.drawable.activity_ediya;
 import static com.example.workingapp.R.drawable.activity_marker_add_icon;
 import static com.example.workingapp.R.drawable.activity_marker_location;
+import static com.example.workingapp.R.drawable.activity_mega_coffee;
+import static com.example.workingapp.R.drawable.activity_parri_baguette;
+import static com.example.workingapp.R.drawable.activity_star_bucks;
+import static com.example.workingapp.R.drawable.activity_the_coffee;
+import static com.example.workingapp.R.drawable.activity_tous_les_jours;
+import static com.example.workingapp.R.id.*;
+import static noman.googleplaces.NRPlaces.*;
 import static noman.googleplaces.PlaceType.*;
 
 import androidx.annotation.NonNull;
@@ -16,10 +29,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -27,6 +42,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Parcel;
 import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,6 +76,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.SphericalUtil;
 
@@ -104,9 +121,11 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
 
     public View mLayout;
 
-    public TextView tv_my_gps_location_view, tv_move_marker;
+    public TextView tv_my_gps_location_view;
 
     CardView cv_food_menu1, cv_exercise_menu2, cv_bread_menu3, cv_best_map_insert, cv_best_map_move;
+    EditText et_search_address;
+    Button btn_search_address;
 
     List<Marker> previous_marker = null;
 
@@ -115,11 +134,19 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
     private OpenMarkerHelper mMarkerHelper;
     private MarkerStreamAdapter markerStreamAdapter;
 
+    private MarkerOptions markerOptions;
+
     private long pressedTime;
 
-    private ImageView iv_earth_click, iv_2d_click, iv_3d_click, iv_subway_click, iv_bus_click;
+    private ImageView iv_earth_click, iv_2d_click, iv_3d_click, iv_subway_click, iv_bus_click, iv_share_click;
 
     private Dialog dialog;
+
+    private Geocoder geocoder;
+
+    private TextView tv_menu_marker_title, tv_menu_snippet_title;
+    
+    private CardView cv_menu;
 
     @Override
     public void onBackPressed() {
@@ -152,33 +179,43 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_marker);
+        setContentView(layout.activity_marker);
 
         mMarkerHelper = new OpenMarkerHelper(this);
-        mRecyclerView = findViewById(R.id.stream_recyclerview);
+        mRecyclerView = findViewById(stream_recyclerview);
         mMarkerItems = new ArrayList<>();
 
         previous_marker = new ArrayList<>();
 
-        cv_food_menu1 = findViewById(R.id.cv_food_menu1);
-        cv_exercise_menu2 = findViewById(R.id.cv_exercise_menu2);
-        cv_bread_menu3 = findViewById(R.id.cv_bread_menu3);
+        cv_food_menu1 = findViewById(id.cv_food_menu1);
+        cv_exercise_menu2 = findViewById(id.cv_exercise_menu2);
+        cv_bread_menu3 = findViewById(id.cv_bread_menu3);
 
-        cv_best_map_move = findViewById(R.id.cv_weather);
+        cv_best_map_move = findViewById(cv_weather);
 
-        cv_best_map_insert = findViewById(R.id.cv_best_map_insert);
+        cv_best_map_insert = findViewById(id.cv_best_map_insert);
 
-        iv_earth_click = findViewById(R.id.iv_earth_click);
+        et_search_address = findViewById(et_search);
 
-        iv_2d_click = findViewById(R.id.iv_2d_click);
-        iv_3d_click = findViewById(R.id.iv_3d_click);
+        iv_earth_click = findViewById(id.iv_earth_click);
 
-        iv_subway_click = findViewById(R.id.iv_subway_click);
-        iv_bus_click = findViewById(R.id.iv_bus_click);
+        iv_2d_click = findViewById(id.iv_2d_click);
+        iv_3d_click = findViewById(id.iv_3d_click);
+
+        iv_subway_click = findViewById(id.iv_subway_click);
+        iv_bus_click = findViewById(id.iv_bus_click);
+        iv_share_click = findViewById(R.id.iv_share_click);
+
+        tv_menu_marker_title = findViewById(id.tv_menu_marker_title);
+        tv_menu_snippet_title = findViewById(id.tv_menu_snippet_title);
+
+        btn_search_address = findViewById(id.btn_search_address);
+
+        cv_menu = findViewById(cv_map_click);
 
         dialog = new Dialog(ActivityMarkerActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_earth_item);
+        dialog.setContentView(layout.dialog_earth_item);
 
         loadRecentDB();
 
@@ -203,16 +240,25 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             }
         });
 
-        Glide.with(ActivityMarkerActivity.this).load(R.drawable.activity_earth_icon_menu).into(iv_earth_click);
+        btn_search_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Location location = getLocationFromAddress(getApplicationContext(), et_search_address.getText().toString());
+
+                showCurrentLocation(location);
+            }
+        });
+
+        Glide.with(ActivityMarkerActivity.this).load(drawable.activity_earth_icon_menu).into(iv_earth_click);
 
         iv_earth_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.show();
 
-                ImageView iv_2d_click = dialog.findViewById(R.id.iv_2d_click);
-                ImageView iv_3d_click = dialog.findViewById(R.id.iv_3d_click);
-                ImageView iv_4d_click = dialog.findViewById(R.id.iv_4d_click);
+                ImageView iv_2d_click = dialog.findViewById(id.iv_2d_click);
+                ImageView iv_3d_click = dialog.findViewById(id.iv_3d_click);
+                ImageView iv_4d_click = dialog.findViewById(id.iv_4d_click);
 
                 iv_2d_click.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -268,7 +314,7 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
                     @Override
                     public void onMapLongClick(@NonNull LatLng latLng) {
 
-                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_stream, null);
+                        View dialogView = getLayoutInflater().inflate(layout.dialog_stream, null);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                         builder.setView(dialogView);
@@ -276,16 +322,16 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
 
-                        TextView tv_latitude_title_view = dialogView.findViewById(R.id.tv_latitude_title_view);
-                        TextView tv_hardness_title_view = dialogView.findViewById(R.id.tv_hardness_title_view);
+                        TextView tv_latitude_title_view = dialogView.findViewById(id.tv_latitude_title_view);
+                        TextView tv_hardness_title_view = dialogView.findViewById(id.tv_hardness_title_view);
 
                         tv_latitude_title_view.setText(String.valueOf(latLng.latitude));
                         tv_hardness_title_view.setText(String.valueOf(latLng.longitude));
 
-                        EditText et_title = dialogView.findViewById(R.id.et_title);
-                        EditText et_snippet = dialogView.findViewById(R.id.et_snippet);
+                        EditText et_title = dialogView.findViewById(id.et_title);
+                        EditText et_snippet = dialogView.findViewById(id.et_snippet);
 
-                        Button btn_ok = dialogView.findViewById(R.id.btn_ok);
+                        Button btn_ok = dialogView.findViewById(id.btn_ok);
 
                         btn_ok.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -334,11 +380,11 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             }
         });
 
-        tv_my_gps_location_view = findViewById(R.id.tv_my_gps_location_view);
+        tv_my_gps_location_view = findViewById(id.tv_my_gps_location_view);
 
         previous_marker = new ArrayList<>();
 
-        mLayout = findViewById(R.id.layout_main);
+        mLayout = findViewById(layout_main);
 
         locationRequest = new com.google.android.gms.location.LocationRequest()
                 .setPriority(com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -352,13 +398,13 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        SupportMapFragment supportMapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment supportMapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(map);
 
         assert supportMapFragment != null;
         supportMapFragment.getMapAsync(this);
 
-        @SuppressLint("CutPasteId") final ScrollView scrollView = (ScrollView)findViewById(R.id.layout_main);
-        ImageView ivMapTransparent = (ImageView)findViewById(R.id.ivMapTransparent);
+        @SuppressLint("CutPasteId") final ScrollView scrollView = (ScrollView)findViewById(layout_main);
+        ImageView ivMapTransparent = (ImageView)findViewById(id.ivMapTransparent);
 
         ivMapTransparent.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -382,6 +428,55 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             }
         });
 
+
+        iv_share_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent Sharing_Intent = new Intent(Intent.ACTION_SEND);
+                Sharing_Intent.setType("text/plain");
+
+                String getMarkerTitleText = tv_menu_marker_title.getText().toString();
+                String getMarkerLocationText = tv_menu_snippet_title.getText().toString();
+
+                Sharing_Intent.putExtra(Intent.EXTRA_TEXT, "간판 이름은 " + getMarkerTitleText + " (이)고 위치는 " + getMarkerLocationText);
+
+                Intent Sharing = Intent.createChooser(Sharing_Intent, "공유하기");
+                startActivity(Sharing);
+            }
+        });
+    }
+
+    private Location getLocationFromAddress(Context applicationContext, String address) {
+        Geocoder geocoder = new Geocoder(applicationContext);
+        List<Address> addresses;
+        Location resLocation = new Location("");
+
+        try {
+            addresses = geocoder.getFromLocationName(address, 5);
+
+            if ((addresses == null) || (addresses.size() == 0)) {
+            }
+
+            if (et_search_address.getText().toString().equals("")) {
+                Toast.makeText(ActivityMarkerActivity.this, "알 수 없는 주소입니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            Address addressLoc = addresses.get(0);
+
+            resLocation.setLatitude(addressLoc.getLatitude());
+            resLocation.setLongitude(addressLoc.getLongitude());
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        return resLocation;
+    }
+
+    private void showCurrentLocation(Location location) {
+        LatLng curPoint = new LatLng(location.getLatitude(), location.getLongitude());
+
+        _googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
     }
 
     private void loadRecentDB() {
@@ -454,7 +549,6 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
                         Toast.makeText(ActivityMarkerActivity.this, addedMarker.getTitle() + "까지" + (int)distance + "m 남음", Toast.LENGTH_SHORT).show();
                     }
                 }
-
 
                 currentPosition
                         = new LatLng(location.getLatitude(), location.getLongitude());
@@ -578,6 +672,7 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             _googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             _googleMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
+
         } catch (Exception exception) {
             LatLng latLng = new LatLng(37.5, 126.9);
 
@@ -647,7 +742,7 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             previous_marker.clear();
         }
 
-        new NRPlaces.Builder()
+        new Builder()
                 .listener(ActivityMarkerActivity.this)
                 .key("AIzaSyB_X_VLyr9sUV-8c25918Dhr9U9oCn6IXo")
                 .latlng(location.latitude, location.longitude)
@@ -664,24 +759,7 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             previous_marker.clear();
         }
 
-        new NRPlaces.Builder()
-                .listener(ActivityMarkerActivity.this)
-                .key("AIzaSyB_X_VLyr9sUV-8c25918Dhr9U9oCn6IXo")
-                .latlng(location.latitude, location.longitude)
-                .radius(5000)
-                .type(SUBWAY_STATION)
-                .build()
-                .execute();
-    }
-
-    public void showPlaceBusInformation(LatLng location) {
-        _googleMap.clear();
-
-        if (previous_marker != null) {
-            previous_marker.clear();
-        }
-
-        new NRPlaces.Builder()
+        new Builder()
                 .listener(ActivityMarkerActivity.this)
                 .key("AIzaSyB_X_VLyr9sUV-8c25918Dhr9U9oCn6IXo")
                 .latlng(location.latitude, location.longitude)
@@ -698,11 +776,11 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             previous_marker.clear();
         }
 
-        new NRPlaces.Builder()
+        new Builder()
                 .listener(ActivityMarkerActivity.this)
                 .key("AIzaSyB_X_VLyr9sUV-8c25918Dhr9U9oCn6IXo")
                 .latlng(location.latitude, location.longitude)
-                .radius(500)
+                .radius(5000)
                 .type(CAFE)
                 .build()
                 .execute();
@@ -715,7 +793,7 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             previous_marker.clear();
         }
 
-        new NRPlaces.Builder()
+        new Builder()
                 .listener(ActivityMarkerActivity.this)
                 .key("AIzaSyB_X_VLyr9sUV-8c25918Dhr9U9oCn6IXo")
                 .latlng(location.latitude, location.longitude)
@@ -753,24 +831,19 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case GPS_ENABLE_REQUEST_CODE:
+        if (requestCode == GPS_ENABLE_REQUEST_CODE) {
+            if (checkLocationServicesStatus()) {
                 if (checkLocationServicesStatus()) {
-                    if (checkLocationServicesStatus()) {
 
-                        needRequest = true;
-
-                        return;
-                    }
+                    needRequest = true;
                 }
-
-                break;
+            }
         }
     }
 
     @Override
     public void onPlacesFailure(PlacesException e) {
-
+        e.printStackTrace();
     }
 
     @Override
@@ -787,7 +860,9 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
                 for (noman.googleplaces.Place place: places) {
 
                     @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(activity_marker_location);
+
                     Bitmap bitmap = bitmapDrawable.getBitmap();
+
                     Bitmap markerBitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
 
                     LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
@@ -800,14 +875,34 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
                     markerPlaceOptions.snippet(markerSnippet);
                     markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap));
 
+                    getBreadMarkerImageSettings(place, markerPlaceOptions, latLng, markerSnippet);
+                    getCoffeeMarkerImageSettings(place, markerPlaceOptions, latLng, markerSnippet);
+
                     _googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(@NonNull Marker marker) {
-                            Intent intent = new Intent(ActivityMarkerActivity.this, ListViewActivity.class);
-                            intent.putExtra("title", marker.getTitle());
-                            intent.putExtra("snippet", marker.getSnippet());
+                            _googleMap.addPolyline(new PolylineOptions().add(latLng, latLng).width(5).color(Color.RED));
 
+                            Intent intent = new Intent(ActivityMarkerActivity.this, ListViewActivity.class);
                             startActivity(intent);
+                        }
+                    });
+
+                    _googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(@NonNull Marker marker) {
+                            cv_menu.setVisibility(View.VISIBLE);
+                            tv_menu_marker_title.setText(marker.getTitle());
+                            tv_menu_snippet_title.setText(marker.getSnippet());
+
+                            return false;
+                        }
+                    });
+
+                    _googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(@NonNull LatLng latLng) {
+                            cv_menu.setVisibility(View.INVISIBLE);
                         }
                     });
 
@@ -820,6 +915,112 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
                 previous_marker.addAll(hashSet);
             }
         });
+    }
+
+    // 하드코딩
+    private void getBreadMarkerImageSettings(noman.googleplaces.Place place, MarkerOptions markerPlaceOptions, LatLng latLng, String markerSnippet) {
+        if (place.getName().contains("파리") || place.getName().contains("pari")) {
+
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable pariBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_parri_baguette);
+            Bitmap pariBitmap = pariBitmapDrawable.getBitmap();
+            Bitmap markerPariBitmap = Bitmap.createScaledBitmap(pariBitmap, 120, 120, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerPariBitmap));
+        }
+
+        if (place.getName().contains("tous") || place.getName().contains("뚜레")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable tuesBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_tous_les_jours);
+            Bitmap tuesBitmap = tuesBitmapDrawable.getBitmap();
+            Bitmap markerTuesBitmap = Bitmap.createScaledBitmap(tuesBitmap, 120, 120, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerTuesBitmap));
+        }
+
+        if (place.getName().contains("던킨") || place.getName().contains("dunkin")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable dunkinBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_dunkin);
+            Bitmap dunkinBitmap = dunkinBitmapDrawable.getBitmap();
+            Bitmap markerDunkinBitmap = Bitmap.createScaledBitmap(dunkinBitmap, 120, 120, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerDunkinBitmap));
+        }
+
+        if (place.getName().equals("꽈배기")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable breadBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_bread1);
+            Bitmap breadBitmap = breadBitmapDrawable.getBitmap();
+            Bitmap markerBreadBitmap = Bitmap.createScaledBitmap(breadBitmap, 100, 100, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerBreadBitmap));
+        }
+
+    }
+
+    private void getCoffeeMarkerImageSettings(noman.googleplaces.Place place, MarkerOptions markerPlaceOptions, LatLng latLng, String markerSnippet) {
+
+        if (place.getName().contains("스타벅스") || place.getName().contains("Star")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable starBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_star_bucks);
+            Bitmap starBitmap = starBitmapDrawable.getBitmap();
+            Bitmap markerStarBitmap = Bitmap.createScaledBitmap(starBitmap, 80, 80, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerStarBitmap));
+        }
+        if (place.getName().contains("메가커피") || place.getName().contains("Mega")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable megaBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_mega_coffee);
+            Bitmap megaBitmap = megaBitmapDrawable.getBitmap();
+            Bitmap markerMegaBitmap = Bitmap.createScaledBitmap(megaBitmap, 80, 80, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerMegaBitmap));
+        }
+
+        if (place.getName().contains("이디야") || place.getName().contains("Ediya")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable ediyaBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_ediya);
+            Bitmap ediyaBitmap = ediyaBitmapDrawable.getBitmap();
+            Bitmap markerEdiyaBitmap = Bitmap.createScaledBitmap(ediyaBitmap, 120, 120, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerEdiyaBitmap));
+        }
+
+        if (place.getName().contains("더카페") || place.getName().contains("The")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable theCafeBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_the_coffee);
+            Bitmap TheCafeBitmap = theCafeBitmapDrawable.getBitmap();
+            Bitmap markerTheCafeBitmap = Bitmap.createScaledBitmap(TheCafeBitmap, 80, 80, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerTheCafeBitmap));
+        }
+
+        if (place.getName().contains("컴포즈") || place.getName().contains("Compose")) {
+            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable ComposeBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_compose_coffee);
+            Bitmap ComposeBitmap = ComposeBitmapDrawable.getBitmap();
+            Bitmap markerComposeBitmap = Bitmap.createScaledBitmap(ComposeBitmap, 80, 80, false);
+
+            markerPlaceOptions.position(latLng);
+            markerPlaceOptions.title(place.getName());
+            markerPlaceOptions.snippet(markerSnippet);
+            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerComposeBitmap));
+        }
     }
 
     @Override

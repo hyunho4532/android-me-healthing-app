@@ -10,18 +10,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.PowerManager;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +29,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.workingapp.Activity.exercise.SquatActivity;
+import com.example.workingapp.Fragment.viewPager.adapter.SettingAdapter;
 import com.example.workingapp.R;
-
-import java.util.Objects;
 
 public class WorkFragment extends Fragment implements SensorEventListener {
 
@@ -52,6 +50,12 @@ public class WorkFragment extends Fragment implements SensorEventListener {
     boolean drawerToggle;
 
     TextView tv_exercise_title, tv_click_me, tv_day_goal_title;
+
+    private ViewPager2 mPager;
+    private FragmentStateAdapter pagerAdapter;
+    private int num_page = 3;
+
+    private CardView cvSquatMoveExercise;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +80,29 @@ public class WorkFragment extends Fragment implements SensorEventListener {
         tv_click_me = view.findViewById(R.id.tv_click_me);
 
         targetView = view.findViewById(R.id.content);
+
+        cvSquatMoveExercise = view.findViewById(R.id.cv_squat_exercise);
+
+        mPager = view.findViewById(R.id.viewpager);
+        pagerAdapter = new SettingAdapter(requireActivity(), num_page);
+
+        mPager.setAdapter(pagerAdapter);
+
+        mPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+
+        mPager.setCurrentItem(1000);
+        mPager.setOffscreenPageLimit(4);
+
+        mPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+
+                if (positionOffsetPixels == 0) {
+                    mPager.setCurrentItem(position);
+                }
+            }
+        });
 
         class DrawButtonClickListener implements View.OnClickListener {
             @Override
@@ -107,7 +134,6 @@ public class WorkFragment extends Fragment implements SensorEventListener {
 
                 progressBar.setMax(Integer.parseInt(et_goal_count.getText().toString()));
                 Toast.makeText(getActivity(), "목표 걸음수가 입력되었습니다.", Toast.LENGTH_SHORT).show();
-                tv_day_goal_title.setText(et_goal_count.getText().toString());
 
                 tvGoalStep.setText(et_goal_count.getText().toString());
 
@@ -116,6 +142,14 @@ public class WorkFragment extends Fragment implements SensorEventListener {
 
                 editor.putString("totalCount", tvGoalStep.getText().toString());
                 editor.apply();
+            }
+        });
+
+        cvSquatMoveExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent squatIntent = new Intent(requireActivity(), SquatActivity.class);
+                startActivity(squatIntent);
             }
         });
 

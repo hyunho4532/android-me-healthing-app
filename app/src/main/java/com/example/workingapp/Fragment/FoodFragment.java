@@ -103,7 +103,14 @@ public class FoodFragment extends Fragment  {
                     editor.apply();
 
                 } catch (NumberFormatException numberFormatException) {
-                    int resultKcal = Integer.parseInt(et_kcal_title.getText().toString());
+
+                    int resultKcal = 0;
+
+                    if (et_kcal_title.getText().toString().isEmpty()) {
+                        Toast.makeText(requireActivity(), "칼로리 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        resultKcal = Integer.parseInt(et_kcal_title.getText().toString());
+                    }
 
                     resultProgress += resultKcal;
 
@@ -115,10 +122,21 @@ public class FoodFragment extends Fragment  {
                         Toast.makeText(requireActivity(), "목표 칼로리 돌파 다시 설정해주세요.", Toast.LENGTH_SHORT).show();
                     }
 
-                    SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("kcalList", Context.MODE_PRIVATE);
+                    SharedPreferences sharedPreferences = requireActivity()
+                            .getSharedPreferences("kcalList", Context.MODE_PRIVATE);
+
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("inputKcal", Integer.parseInt(tv_count_step.getText().toString()));
-                    editor.putInt("goalKcal", Integer.parseInt(tv_goal_step.getText().toString()));
+                    editor.putInt (
+                            "inputKcal", Integer.parseInt (
+                                    tv_count_step.getText().toString()
+                            )
+                    );
+
+                    editor.putInt (
+                            "goalKcal", Integer.parseInt (
+                                    tv_goal_step.getText().toString()
+                            )
+                    );
 
                     editor.apply();
                 }
@@ -136,7 +154,7 @@ public class FoodFragment extends Fragment  {
         super.onStart();
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("kcalList", Context.MODE_PRIVATE);
-        int inputKcal = sharedPreferences.getInt("inputKcal", 0);
+        int inputKcal = sharedPreferences.getInt("inputKcal", Integer.parseInt(tv_count_step.getText().toString()));
         int goalKcal = sharedPreferences.getInt("goalKcal", 0);
 
         tv_count_step.setText(String.valueOf(inputKcal));

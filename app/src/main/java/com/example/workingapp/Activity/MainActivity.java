@@ -2,8 +2,6 @@ package com.example.workingapp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,12 +9,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.workingapp.Fragment.FoodFragment;
-import com.example.workingapp.Fragment.MainFragment;
+import com.example.workingapp.Fragment.BoardFragment;
+import com.example.workingapp.Fragment.ProfileFragment;
 import com.example.workingapp.Fragment.WorkFragment;
 import com.example.workingapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         FoodFragment foodFragment = new FoodFragment();
         WorkFragment workFragment = new WorkFragment();
-        MainFragment mainFragment = new MainFragment();
+        BoardFragment mainFragment = new BoardFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, workFragment).commitAllowingStateLoss();
 
@@ -58,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.fragment_c:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, mainFragment).commitAllowingStateLoss();
                         return true;
+
+                    case R.id.fragment_d:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, profileFragment).commitAllowingStateLoss();
 
                     default:
                         return true;

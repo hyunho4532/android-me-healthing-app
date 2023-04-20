@@ -2,15 +2,12 @@ package com.example.workingapp.Activity.marker.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -68,8 +65,8 @@ public class MarkerStreamAdapter extends RecyclerView.Adapter<MarkerStreamAdapte
         public MyStreamHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvTitle = itemView.findViewById(R.id.tv_title);
-            tvLocation = itemView.findViewById(R.id.tv_locaiton);
+            tvTitle = itemView.findViewById(R.id.tvNameText);
+            tvLocation = itemView.findViewById(R.id.tvHobbyText);
             tvLatitude = itemView.findViewById(R.id.tv_latitude_view);
             tvHardness = itemView.findViewById(R.id.tv_hardness_view);
             cvClickMe = itemView.findViewById(R.id.cv_click_me);

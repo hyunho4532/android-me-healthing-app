@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.board.introduce.IntroduceBoardActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/introduce_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_introduce_user_title"
+        tools:listitem="@layout/recycler_introduce_item" />
+
+    <TextView
+        android:id="@+id/tv_introduce_user_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="안녕하세요! \n본인을 자세하게 소개해주세요!"
+        android:gravity="center"
+        android:lineSpacingExtra="8dp"
+        android:textSize="28sp"
+        android:fontFamily="@font/original"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/original"
+        android:text="당신의 이름은 무엇인가요?"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/introduce_recycler"
+        app:layout_constraintTop_toBottomOf="@+id/iv_gallery_click" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="이름을 입력해주세요!"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_hobby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/original"
+        android:text="간단하게 취미를 적는다면?"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/et_name"
+        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+
+    <EditText
+        android:id="@+id/et_hobby"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="@+id/tv_hobby"
+        app:layout_constraintTop_toBottomOf="@+id/tv_hobby" />
+
+    <Button
+        android:id="@+id/btnBoardIntroduce"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:onClick="clickButton"
+        android:text="본인소개 완료!"
+        app:layout_constraintEnd_toEndOf="@+id/et_hobby"
+        app:layout_constraintStart_toStartOf="@+id/et_hobby"
+        app:layout_constraintTop_toBottomOf="@+id/et_hobby" />
+
+    <TextView
+        android:id="@+id/tv_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="프로필을 추가해주세요! (필수 아님)"
+        android:textSize="24sp"
+        android:fontFamily="@font/original"
+        app:layout_constraintStart_toStartOf="@+id/introduce_recycler"
+        app:layout_constraintTop_toBottomOf="@+id/introduce_recycler" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_gallery_click"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/fragment_gallery_add_icon"
+        app:layout_constraintStart_toStartOf="@+id/tv_profile"
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

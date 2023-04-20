@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tvNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -33,15 +33,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_locaiton"
+                android:id="@+id/tvHobbyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/happiness_sans_bold"
                 android:text="위치"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/tv_title"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+                app:layout_constraintStart_toStartOf="@+id/tvNameText"
+                app:layout_constraintTop_toBottomOf="@+id/tvNameText" />
 
             <TextView
                 android:id="@+id/tv_latitude_view"
