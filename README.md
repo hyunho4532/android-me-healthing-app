@@ -20,6 +20,11 @@
 
   <h3>SQL DB</h3>
   <img src="https://user-images.githubusercontent.com/118269278/233752125-34441271-1499-4733-a9a5-f3ac85757443.jpg" width=80 height=70 />
+  
+  <h3>Google Maps Platform - API</h3>
+  <img src="https://lh3.googleusercontent.com/g5hILDlwflkhQ7d3EwGWWXgoqcyTeiIi78zGc-eYfvJQq3HGI2GbaAoc5OyYFfJYZQCu7MT65Xi0l1Kb7GEb=w80-h80" width=80 height=70 />
+  <img src="https://lh3.googleusercontent.com/I6iyLYhhqphvyIIVIwkm-H7D96s5SPOTyEUfulZokMqez2JPiZUGmTr76u0a7ngsjYgXg7OYRi8d8RdanYBN=w80-h80" width=80 height=70 />
+  <img src="https://lh3.googleusercontent.com/OgFgZDq6rd-5rkFUtLS3FlR2uY5jpGVUBThPVS3JpNigCJSPjBS057dVJY6yfg3nBbpTKnRJd7qToq2yWfZM=w80-h80" width=80 height=70 />
 </div>
 
 <hr>
