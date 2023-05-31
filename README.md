@@ -25,6 +25,31 @@
   <img src="https://lh3.googleusercontent.com/g5hILDlwflkhQ7d3EwGWWXgoqcyTeiIi78zGc-eYfvJQq3HGI2GbaAoc5OyYFfJYZQCu7MT65Xi0l1Kb7GEb=w80-h80" width=80 height=70 />
   <img src="https://lh3.googleusercontent.com/I6iyLYhhqphvyIIVIwkm-H7D96s5SPOTyEUfulZokMqez2JPiZUGmTr76u0a7ngsjYgXg7OYRi8d8RdanYBN=w80-h80" width=80 height=70 />
   <img src="https://lh3.googleusercontent.com/OgFgZDq6rd-5rkFUtLS3FlR2uY5jpGVUBThPVS3JpNigCJSPjBS057dVJY6yfg3nBbpTKnRJd7qToq2yWfZM=w80-h80" width=80 height=70 />
+ 
+  <h2>Android Jetpack</h2>  
+  <ul>
+    <li><h3>Architecture</h3></li>
+    <ul>
+      <li>Data Binding</li>
+      <li>Lifecycles</li>
+      <li>Navigation</li>
+    </ul>
+  </ul>
+  
+  <ul>
+    <li><h3>UI</h3></li>
+    <ul>
+      <li>Fragment</li>
+      <li>Layout</li>
+    </ul>
+  </ul>
+  
+  <ul>
+    <li><h3>Behavior</h3></li>
+    <ul>
+      <li>Permissions</li>
+    </ul>
+  </ul>
 </div>
 
 <hr>
