@@ -920,50 +920,33 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
     // 하드코딩
     private void getBreadMarkerImageSettings(noman.googleplaces.Place place, MarkerOptions markerPlaceOptions, LatLng latLng, String markerSnippet) {
         if (place.getName().contains("파리") || place.getName().contains("pari")) {
-
-            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable pariBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_parri_baguette);
-            Bitmap pariBitmap = pariBitmapDrawable.getBitmap();
-            Bitmap markerPariBitmap = Bitmap.createScaledBitmap(pariBitmap, 120, 120, false);
-
-            markerPlaceOptions.position(latLng);
-            markerPlaceOptions.title(place.getName());
-            markerPlaceOptions.snippet(markerSnippet);
-            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerPariBitmap));
+            setMarkerIconFromResource(markerPlaceOptions, latLng, place.getName(), markerSnippet, activity_parri_baguette, 120);
         }
 
         if (place.getName().contains("tous") || place.getName().contains("뚜레")) {
-            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable tuesBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_tous_les_jours);
-            Bitmap tuesBitmap = tuesBitmapDrawable.getBitmap();
-            Bitmap markerTuesBitmap = Bitmap.createScaledBitmap(tuesBitmap, 120, 120, false);
-
-            markerPlaceOptions.position(latLng);
-            markerPlaceOptions.title(place.getName());
-            markerPlaceOptions.snippet(markerSnippet);
-            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerTuesBitmap));
+            setMarkerIconFromResource(markerPlaceOptions, latLng, place.getName(), markerSnippet, activity_tous_les_jours, 120);
         }
 
         if (place.getName().contains("던킨") || place.getName().contains("dunkin")) {
-            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable dunkinBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_dunkin);
-            Bitmap dunkinBitmap = dunkinBitmapDrawable.getBitmap();
-            Bitmap markerDunkinBitmap = Bitmap.createScaledBitmap(dunkinBitmap, 120, 120, false);
-
-            markerPlaceOptions.position(latLng);
-            markerPlaceOptions.title(place.getName());
-            markerPlaceOptions.snippet(markerSnippet);
-            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerDunkinBitmap));
+            setMarkerIconFromResource(markerPlaceOptions, latLng, place.getName(), markerSnippet, activity_dunkin, 120);
         }
 
         if (place.getName().equals("꽈배기")) {
-            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable breadBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_bread1);
-            Bitmap breadBitmap = breadBitmapDrawable.getBitmap();
-            Bitmap markerBreadBitmap = Bitmap.createScaledBitmap(breadBitmap, 100, 100, false);
-
-            markerPlaceOptions.position(latLng);
-            markerPlaceOptions.title(place.getName());
-            markerPlaceOptions.snippet(markerSnippet);
-            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerBreadBitmap));
+            setMarkerIconFromResource(markerPlaceOptions, latLng, place.getName(), markerSnippet, activity_bread1, 120);
         }
 
+    }
+
+    private void setMarkerIconFromResource(MarkerOptions markerPlaceOptions, LatLng latLng, String placeName, String markerSnippet, int resource, int size) {
+        @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable bitmapDrawable = (BitmapDrawable)getResources().getDrawable(resource);
+
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        Bitmap markerBitmap = Bitmap.createScaledBitmap(bitmap, size, size, false);
+
+        markerPlaceOptions.position(latLng);
+        markerPlaceOptions.title(placeName);
+        markerPlaceOptions.snippet(markerSnippet);
+        markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap));
     }
 
     private void getCoffeeMarkerImageSettings(noman.googleplaces.Place place, MarkerOptions markerPlaceOptions, LatLng latLng, String markerSnippet) {
