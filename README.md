@@ -1,5 +1,5 @@
-# android-me-healthing-app
-안드로이드 토이 프로젝트 "헬딩" 입니다.
+# HVA-V2 버전
+새롭게 리뉴얼하고 세련된 디자인으로 변경했습니다.
 
 <div align="left">
   <h3>Tool</h3>
