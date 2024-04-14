@@ -952,14 +952,7 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
     private void getCoffeeMarkerImageSettings(noman.googleplaces.Place place, MarkerOptions markerPlaceOptions, LatLng latLng, String markerSnippet) {
 
         if (place.getName().contains("스타벅스") || place.getName().contains("Star")) {
-            @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable starBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_star_bucks);
-            Bitmap starBitmap = starBitmapDrawable.getBitmap();
-            Bitmap markerStarBitmap = Bitmap.createScaledBitmap(starBitmap, 80, 80, false);
-
-            markerPlaceOptions.position(latLng);
-            markerPlaceOptions.title(place.getName());
-            markerPlaceOptions.snippet(markerSnippet);
-            markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerStarBitmap));
+            setCoffeeMarkerIconFromResource(markerPlaceOptions, latLng, place.getName(), markerSnippet, activity_star_bucks, 80);
         }
         if (place.getName().contains("메가커피") || place.getName().contains("Mega")) {
             @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable megaBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_mega_coffee);
@@ -1004,6 +997,17 @@ public class ActivityMarkerActivity extends AppCompatActivity implements MarkerS
             markerPlaceOptions.snippet(markerSnippet);
             markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerComposeBitmap));
         }
+    }
+
+    private void setCoffeeMarkerIconFromResource(MarkerOptions markerPlaceOptions, LatLng latLng, String name, String markerSnippet, int activity_star_bucks, int i) {
+        @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable starBitmapDrawable = (BitmapDrawable)getResources().getDrawable(activity_star_bucks);
+        Bitmap starBitmap = starBitmapDrawable.getBitmap();
+        Bitmap markerStarBitmap = Bitmap.createScaledBitmap(starBitmap, 80, 80, false);
+
+        markerPlaceOptions.position(latLng);
+        markerPlaceOptions.title(place.getName());
+        markerPlaceOptions.snippet(markerSnippet);
+        markerPlaceOptions.icon(BitmapDescriptorFactory.fromBitmap(markerStarBitmap));
     }
 
     @Override
